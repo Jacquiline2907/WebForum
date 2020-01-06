@@ -1,10 +1,11 @@
 package com.forum.WebForum.controllers;
 
+import com.forum.WebForum.Iservice.IPremiumKitBonusCalculation;
 import com.forum.WebForum.dataProvider.CompenstionPlansData;
 import com.forum.WebForum.model.CompensationPlans;
 import com.forum.WebForum.model.Greetings;
+import com.forum.WebForum.model.Percentage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -15,6 +16,16 @@ import java.util.Map;
 @CrossOrigin("http://localhost:4200")
 //@RequestMapping("/nextSphere")
 public class WebController {
+
+    @Autowired
+    IPremiumKitBonusCalculation IPremiumKitBonusCalculation;
+
+
+    @PostMapping("/percentage")
+    public void setPercentage(@RequestBody Percentage percentage) throws Exception {
+        IPremiumKitBonusCalculation.setPercentage(percentage);
+
+    }
 
 
     @RequestMapping("/home")
