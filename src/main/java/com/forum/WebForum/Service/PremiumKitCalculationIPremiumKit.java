@@ -23,7 +23,7 @@ public class PremiumKitCalculationIPremiumKit implements IPremiumKitBonusCalcula
         System.out.println(percentage);
         try {
             System.out.println("In try");
-            OutputStream output = new FileOutputStream("C:\\Users\\vmuralidharan\\Downloads\\PremiumKitBonus\\PremiumKitBonus\\src\\main\\resources\\percentage.properties");
+            OutputStream output = new FileOutputStream("percentage.properties");
             Properties p = new Properties();
             String type = "level";
 
@@ -171,7 +171,7 @@ public class PremiumKitCalculationIPremiumKit implements IPremiumKitBonusCalcula
 
         Properties p = new Properties();
 
-        File f = new File("C:\\Users\\vmuralidharan\\Downloads\\PremiumKitBonus\\PremiumKitBonus\\src\\main\\resources\\percentage.properties");
+        File f = new File("percentage.properties");
         InputStream input = new FileInputStream(f);
         p.load(input);
         Enumeration keys = p.propertyNames();
