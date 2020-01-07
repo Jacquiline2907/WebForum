@@ -2,7 +2,7 @@ package com.forum.WebForum.model;
 
 import java.util.Date;
 
-public class OrderData {
+public class PremiumKitOrderData {
 
     private Long orderId;
 
@@ -20,10 +20,10 @@ public class OrderData {
 
     private String directRetailOrder;
 
-    public OrderData() {
+    public PremiumKitOrderData() {
     }
 
-    public OrderData(Long orderId, Date orderDate, String orderType, Long orderValue, Long srp, Long distId, String directOrder, String directRetailOrder) {
+    public PremiumKitOrderData(Long orderId, Date orderDate, String orderType, Long orderValue, Long srp, Long distId, String directOrder, String directRetailOrder) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.orderType = orderType;

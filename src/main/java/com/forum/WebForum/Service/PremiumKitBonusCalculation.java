@@ -3,9 +3,9 @@ package com.forum.WebForum.Service;
 
 import com.forum.WebForum.Iservice.IPremiumKitBonusCalculation;
 import com.forum.WebForum.Util.BonusUtil;
-import com.forum.WebForum.model.DistributorData;
-import com.forum.WebForum.model.OrderData;
-import com.forum.WebForum.model.Percentage;
+import com.forum.WebForum.model.PremiumKitDistributorData;
+import com.forum.WebForum.model.PremiumKitOrderData;
+import com.forum.WebForum.model.PremiumKitPercentage;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -13,10 +13,10 @@ import java.util.*;
 import java.util.function.Predicate;
 
 @Service
-public class PremiumKitCalculationIPremiumKit implements IPremiumKitBonusCalculation {
+public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
 
     //    To set the Values into the Properties File.
-    public String setPercentage(Percentage percentage) throws Exception {
+    public String  setPercentage(PremiumKitPercentage percentage) throws Exception {
 
         System.out.println("inside the set percentage");
 
@@ -25,7 +25,7 @@ public class PremiumKitCalculationIPremiumKit implements IPremiumKitBonusCalcula
             System.out.println("In try");
             OutputStream output = new FileOutputStream("percentage.properties");
             Properties p = new Properties();
-            String type = "level";
+                String type = "level";
 
             p.setProperty(type.concat(".1"), percentage.getL1());
             p.setProperty(type.concat(".2"), percentage.getL2());
@@ -40,7 +40,7 @@ public class PremiumKitCalculationIPremiumKit implements IPremiumKitBonusCalcula
             System.out.println(e.getMessage());
         }
 
-        PremiumKitCalculationIPremiumKit pk = new PremiumKitCalculationIPremiumKit();
+        PremiumKitBonusCalculation pk = new PremiumKitBonusCalculation();
 
         pk.premiumKitBonusCalc();
         return "Properties Set successfully";
@@ -50,25 +50,25 @@ public class PremiumKitCalculationIPremiumKit implements IPremiumKitBonusCalcula
     public void premiumKitBonusCalc() throws Exception {
 
         Map<String, Integer> propsMap = new HashMap<>();
-        propsMap = PremiumKitCalculationIPremiumKit.startProgram();
+        propsMap = PremiumKitBonusCalculation.startProgram();
         System.out.println(propsMap);
 
-        List<OrderData> orderList = new ArrayList<>();
-        List<DistributorData> distributorData = new ArrayList<>();
-        Predicate<OrderData> premiumPredicate = x -> x.getOrderType() == "premium kit";
+        List<PremiumKitOrderData> orderList = new ArrayList<>();
+        List<PremiumKitDistributorData> distributorData = new ArrayList<>();
+        Predicate<PremiumKitOrderData> premiumPredicate = x -> x.getOrderType() == "premium kit";
 
 //List of Orders to process
-        orderList.add(new OrderData(12L, new Date(), "premium kit", 778L, 785L, 12659L, "Y", "N"));
-        orderList.add(new OrderData(55L, new Date(), "Retail", 778L, 785L, 123L, "N", "Y"));
-        orderList.add(new OrderData(55L, new Date(), "premium kit", 778L, 785L, 126L, "N", "Y"));
+        orderList.add(new PremiumKitOrderData(12L, new Date(), "premium kit", 778L, 785L, 12659L, "Y", "N"));
+        orderList.add(new PremiumKitOrderData(55L, new Date(), "Retail", 778L, 785L, 123L, "N", "Y"));
+        orderList.add(new PremiumKitOrderData(55L, new Date(), "premium kit", 778L, 785L, 126L, "N", "Y"));
 
 //        List of Distributors
-        distributorData.add(new DistributorData(12659L, "a", 123L, 2, "Y", true, new Date()));
-        distributorData.add(new DistributorData(126L, "b", 15L, 2, "Y", true, new Date()));
-        distributorData.add(new DistributorData(150L, "c", 15L, 2, "N", true, new Date()));
-        distributorData.add(new DistributorData(123L, "d", 1L, 4, "Y", true, new Date()));
-        distributorData.add(new DistributorData(15L, "e", 1L, 5, "N", true, new Date()));
-        distributorData.add(new DistributorData(1L, "f", 0L, 5, "Y", true, new Date()));
+        distributorData.add(new PremiumKitDistributorData(12659L, "a", 123L, 2, "Y", true, new Date()));
+        distributorData.add(new PremiumKitDistributorData(126L, "b", 15L, 2, "Y", true, new Date()));
+        distributorData.add(new PremiumKitDistributorData(150L, "c", 15L, 2, "N", true, new Date()));
+        distributorData.add(new PremiumKitDistributorData(123L, "d", 1L, 4, "Y", true, new Date()));
+        distributorData.add(new PremiumKitDistributorData(15L, "e", 1L, 5, "N", true, new Date()));
+        distributorData.add(new PremiumKitDistributorData(1L, "f", 0L, 5, "Y", true, new Date()));
 
 //        BonusUtil.orderList.addAll(orderList);
 //        BonusUtil.distributorData.addAll(distributorData);
@@ -80,6 +80,10 @@ public class PremiumKitCalculationIPremiumKit implements IPremiumKitBonusCalcula
                     return x;
                 })
                 .count();
+
+
+        System.out.println(BonusUtil.distributorMap);
+        System.out.println(BonusUtil.distributorData);
         orderList.stream()
                 .map(x -> {
                     BonusUtil.orderMap.put(x.getDistId(), x);
@@ -87,6 +91,10 @@ public class PremiumKitCalculationIPremiumKit implements IPremiumKitBonusCalcula
                     return x;
                 })
                 .count();
+     /*  for(OrderData o:orderList){
+           BonusUtil.orderMap.put(o.getDistId(),o);
+           BonusUtil.orderList.add(o);
+       }*/
 
 
         premiumFilter(premiumPredicate, orderList);
@@ -95,16 +103,15 @@ public class PremiumKitCalculationIPremiumKit implements IPremiumKitBonusCalcula
 
     //    Filter only the PremiumKit Orders
     @Override
-    public void premiumFilter(Predicate<OrderData> premiumPredicate, List<OrderData> orderList) {
+    public void premiumFilter(Predicate<PremiumKitOrderData> premiumPredicate, List<PremiumKitOrderData> orderList) {
         System.out.println("it is with in the Premium Only Order Filter");
 
-        List<DistributorData> premiumOnly1 = new ArrayList<>();
+        List<PremiumKitDistributorData> premiumOnly1 = new ArrayList<>();
 
 
-
-        for (OrderData i : orderList) {
+        for (PremiumKitOrderData i : orderList) {
             if (premiumPredicate.test(i)) {
-                DistributorData dd = new DistributorData();
+                PremiumKitDistributorData dd = new PremiumKitDistributorData();
 
                 long distId = i.getDistId();
                 String active;
@@ -121,7 +128,7 @@ public class PremiumKitCalculationIPremiumKit implements IPremiumKitBonusCalcula
                 System.out.println("Sponser Level is =>" + dd.getLevel());
                 System.out.println("Sponser Level's Percentage is =>" + BonusUtil.propertyMap.get("level." + dd.getLevel()));
 
-                System.out.println("Bonus Amount is =>"+i.getSrp()* BonusUtil.propertyMap.get("level." + dd.getLevel()) / 100);
+                System.out.println("Bonus Amount is =>" + i.getSrp() * BonusUtil.propertyMap.get("level." + dd.getLevel()) / 100);
 //                System.out.println("Premium Only is"+premiumOnly1);
 
             }
@@ -139,17 +146,17 @@ public class PremiumKitCalculationIPremiumKit implements IPremiumKitBonusCalcula
     }
 
     @Override
-    public void distFinder(List<Long> premiumOnly, Predicate<DistributorData> findDistData) {
+    public void distFinder(List<Long> premiumOnly, Predicate<PremiumKitDistributorData> findDistData) {
         List<Long> dis = new ArrayList<>();
         System.out.println("it is in the distFInder");
 
 
 //        To find the Sponser Id and store it in the list
-        for (DistributorData d : BonusUtil.distributorData) {
+        for (PremiumKitDistributorData d : BonusUtil.distributorData) {
             if (findDistData.test(d)) {
                 dis.add(d.getSponserId());
                 System.out.println(dis);
-                DistributorData sponserData = BonusUtil.distributorFinder(d.getSponserId());
+                PremiumKitDistributorData sponserData = BonusUtil.distributorFinder(d.getSponserId());
                 System.out.println(sponserData);
                 System.out.println("Sponser Level is =>" + sponserData.getLevel());
                 System.out.println("Sponser Level's Percentage is =>" + BonusUtil.propertyMap.get("level." + sponserData.getLevel()));

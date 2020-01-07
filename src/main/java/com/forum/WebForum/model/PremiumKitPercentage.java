@@ -1,16 +1,16 @@
 package com.forum.WebForum.model;
 
-public class Percentage {
+public class PremiumKitPercentage {
     private String l1;
     private String l2;
     private String l3;
     private String l4;
     private String l5;
 
-    public Percentage() {
+    public PremiumKitPercentage() {
     }
 
-    public Percentage(String l1, String l2, String l3, String l4, String l5) {
+    public PremiumKitPercentage(String l1, String l2, String l3, String l4, String l5) {
         this.l1 = l1;
         this.l2 = l2;
         this.l3 = l3;

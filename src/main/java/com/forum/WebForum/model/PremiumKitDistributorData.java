@@ -2,7 +2,7 @@ package com.forum.WebForum.model;
 
 import java.util.Date;
 
-public class DistributorData {
+public class PremiumKitDistributorData {
 
     private Long distId;
 
@@ -18,10 +18,10 @@ public class DistributorData {
 
     private Date wqlStartDate;
 
-    public DistributorData() {
+    public PremiumKitDistributorData() {
     }
 
-    public DistributorData(Long distId, String distName, Long sponserId, Integer level, String active, Boolean isWql, Date wqlStartDate) {
+    public PremiumKitDistributorData(Long distId, String distName, Long sponserId, Integer level, String active, Boolean isWql, Date wqlStartDate) {
         this.distId = distId;
         this.distName = distName;
         this.sponserId = sponserId;
