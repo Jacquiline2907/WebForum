@@ -3,6 +3,7 @@ package com.forum.WebForum.Service;
 
 import com.forum.WebForum.Iservice.IPremiumKitBonusCalculation;
 import com.forum.WebForum.Util.BonusUtil;
+import com.forum.WebForum.model.PremiumKitBonusReturn;
 import com.forum.WebForum.model.PremiumKitDistributorData;
 import com.forum.WebForum.model.PremiumKitOrderData;
 import com.forum.WebForum.model.PremiumKitPercentage;
@@ -16,7 +17,7 @@ import java.util.function.Predicate;
 public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
 
     //    To set the Values into the Properties File.
-    public String  setPercentage(PremiumKitPercentage percentage) throws Exception {
+    public PremiumKitBonusReturn  setPercentage(PremiumKitPercentage percentage) throws Exception {
 
         System.out.println("inside the set percentage");
 
@@ -42,12 +43,12 @@ public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
 
         PremiumKitBonusCalculation pk = new PremiumKitBonusCalculation();
 
-        pk.premiumKitBonusCalc();
-        return "Properties Set successfully";
+        PremiumKitBonusReturn  bonusReturn= pk.premiumKitBonusCalc();
+        return bonusReturn;
     }
 
     @Override
-    public void premiumKitBonusCalc() throws Exception {
+    public PremiumKitBonusReturn premiumKitBonusCalc() throws Exception {
 
         Map<String, Integer> propsMap = new HashMap<>();
         propsMap = PremiumKitBonusCalculation.startProgram();
@@ -81,9 +82,9 @@ public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
                 })
                 .count();
 
-
-        System.out.println(BonusUtil.distributorMap);
-        System.out.println(BonusUtil.distributorData);
+//
+//        System.out.println(BonusUtil.distributorMap);
+//        System.out.println(BonusUtil.distributorData);
         orderList.stream()
                 .map(x -> {
                     BonusUtil.orderMap.put(x.getDistId(), x);
@@ -97,17 +98,18 @@ public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
        }*/
 
 
-        premiumFilter(premiumPredicate, orderList);
+        PremiumKitBonusReturn  bonusReturn=premiumFilter(premiumPredicate, orderList);
+        return bonusReturn;
 
     }
 
     //    Filter only the PremiumKit Orders
     @Override
-    public void premiumFilter(Predicate<PremiumKitOrderData> premiumPredicate, List<PremiumKitOrderData> orderList) {
+    public PremiumKitBonusReturn premiumFilter(Predicate<PremiumKitOrderData> premiumPredicate, List<PremiumKitOrderData> orderList) {
         System.out.println("it is with in the Premium Only Order Filter");
 
         List<PremiumKitDistributorData> premiumOnly1 = new ArrayList<>();
-
+        PremiumKitBonusReturn bonusReturn=new PremiumKitBonusReturn();
 
         for (PremiumKitOrderData i : orderList) {
             if (premiumPredicate.test(i)) {
@@ -131,8 +133,16 @@ public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
                 System.out.println("Bonus Amount is =>" + i.getSrp() * BonusUtil.propertyMap.get("level." + dd.getLevel()) / 100);
 //                System.out.println("Premium Only is"+premiumOnly1);
 
+                bonusReturn.setOrderId(i.getOrderId());
+                bonusReturn.setSponserLevel(dd.getLevel());
+                bonusReturn.setSponserId(dd.getDistId());
+                bonusReturn.setBonusAmount(i.getSrp() * BonusUtil.propertyMap.get("level." + dd.getLevel()) / 100);
+
+
             }
         }
+
+
 
 //        System.out.println("Data in Premium only List is");
 //        premiumOnly1.stream().forEach(System.out::println);
@@ -142,7 +152,7 @@ public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
 //
 //        distFinder(premiumOnly, findDistData);
 //        BonusUtil.propertyMap.clear();
-
+        return bonusReturn;
     }
 
     @Override

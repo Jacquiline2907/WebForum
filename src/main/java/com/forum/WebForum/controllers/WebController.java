@@ -4,6 +4,7 @@ import com.forum.WebForum.Iservice.IPremiumKitBonusCalculation;
 import com.forum.WebForum.dataProvider.CompenstionPlansData;
 import com.forum.WebForum.model.CompensationPlans;
 import com.forum.WebForum.model.Greetings;
+import com.forum.WebForum.model.PremiumKitBonusReturn;
 import com.forum.WebForum.model.PremiumKitPercentage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,10 @@ public class WebController {
 
 
     @PostMapping("/percentage")
-    public void setPercentage(@RequestBody PremiumKitPercentage percentage) throws Exception {
-        IPremiumKitBonusCalculation.setPercentage(percentage);
+    public PremiumKitBonusReturn setPercentage(@RequestBody PremiumKitPercentage percentage) throws Exception {
+        PremiumKitBonusReturn bonusReturn= IPremiumKitBonusCalculation.setPercentage(percentage);
+
+        return bonusReturn;
 
     }
 
