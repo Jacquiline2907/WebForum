@@ -76,8 +76,8 @@ public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
 
         distributorData.stream()
                 .map(x -> {
-                    BonusUtil.distributorMap.put(x.getDistId(), x);
-                    BonusUtil.distributorData.add(x);
+                    BonusUtil.premiumKitDistributorMap.put(x.getDistId(), x);
+                    BonusUtil.premiumKitDistributorData.add(x);
                     return x;
                 })
                 .count();
@@ -87,8 +87,8 @@ public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
 //        System.out.println(BonusUtil.distributorData);
         orderList.stream()
                 .map(x -> {
-                    BonusUtil.orderMap.put(x.getDistId(), x);
-                    BonusUtil.orderList.add(x);
+                    BonusUtil.premiumKitOrderMap.put(x.getDistId(), x);
+                    BonusUtil.premiumKitOrderList.add(x);
                     return x;
                 })
                 .count();
@@ -128,15 +128,15 @@ public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
                 } while (active == "N");
                 System.out.println(dd);
                 System.out.println("Sponser Level is =>" + dd.getLevel());
-                System.out.println("Sponser Level's Percentage is =>" + BonusUtil.propertyMap.get("level." + dd.getLevel()));
+                System.out.println("Sponser Level's Percentage is =>" + BonusUtil.premiumKitPropertyMap.get("level." + dd.getLevel()));
 
-                System.out.println("Bonus Amount is =>" + i.getSrp() * BonusUtil.propertyMap.get("level." + dd.getLevel()) / 100);
+                System.out.println("Bonus Amount is =>" + i.getSrp() * BonusUtil.premiumKitPropertyMap.get("level." + dd.getLevel()) / 100);
 //                System.out.println("Premium Only is"+premiumOnly1);
 
                 bonusReturn.setOrderId(i.getOrderId());
                 bonusReturn.setSponserLevel(dd.getLevel());
                 bonusReturn.setSponserId(dd.getDistId());
-                bonusReturn.setBonusAmount(i.getSrp() * BonusUtil.propertyMap.get("level." + dd.getLevel()) / 100);
+                bonusReturn.setBonusAmount(i.getSrp() * BonusUtil.premiumKitPropertyMap.get("level." + dd.getLevel()) / 100);
 
 
             }
@@ -162,19 +162,19 @@ public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
 
 
 //        To find the Sponser Id and store it in the list
-        for (PremiumKitDistributorData d : BonusUtil.distributorData) {
+        for (PremiumKitDistributorData d : BonusUtil.premiumKitDistributorData) {
             if (findDistData.test(d)) {
                 dis.add(d.getSponserId());
                 System.out.println(dis);
                 PremiumKitDistributorData sponserData = BonusUtil.distributorFinder(d.getSponserId());
                 System.out.println(sponserData);
                 System.out.println("Sponser Level is =>" + sponserData.getLevel());
-                System.out.println("Sponser Level's Percentage is =>" + BonusUtil.propertyMap.get("level." + sponserData.getLevel()));
+                System.out.println("Sponser Level's Percentage is =>" + BonusUtil.premiumKitPropertyMap.get("level." + sponserData.getLevel()));
 
-                BonusUtil.orderList
+                BonusUtil.premiumKitOrderList
                         .stream()
                         .filter(x -> x.getDistId() == premiumOnly.get(0))
-                        .map(x -> x.getSrp() * BonusUtil.propertyMap.get("level." + d.getLevel()) / 100)
+                        .map(x -> x.getSrp() * BonusUtil.premiumKitPropertyMap.get("level." + d.getLevel()) / 100)
                         .forEach(System.out::println);
 
             }
@@ -194,10 +194,10 @@ public class PremiumKitBonusCalculation implements IPremiumKitBonusCalculation {
         Enumeration keys = p.propertyNames();
         while (keys.hasMoreElements()) {
             String key = (String) keys.nextElement();
-            BonusUtil.propertyMap.put(key, Integer.parseInt(p.getProperty(key)));
+            BonusUtil.premiumKitPropertyMap.put(key, Integer.parseInt(p.getProperty(key)));
         }
         input.close();
-        return BonusUtil.propertyMap;
+        return BonusUtil.premiumKitPropertyMap;
     }
 }
 

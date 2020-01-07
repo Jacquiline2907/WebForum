@@ -1,14 +1,13 @@
 package com.forum.WebForum.controllers;
 
 import com.forum.WebForum.Iservice.IPremiumKitBonusCalculation;
+import com.forum.WebForum.Iservice.ICustomerAcquisitionBonusCalculationService;
 import com.forum.WebForum.dataProvider.CompenstionPlansData;
-import com.forum.WebForum.model.CompensationPlans;
-import com.forum.WebForum.model.Greetings;
-import com.forum.WebForum.model.PremiumKitBonusReturn;
-import com.forum.WebForum.model.PremiumKitPercentage;
+import com.forum.WebForum.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +19,9 @@ public class WebController {
 
     @Autowired
     IPremiumKitBonusCalculation IPremiumKitBonusCalculation;
+
+    @Autowired
+    ICustomerAcquisitionBonusCalculationService iCustomerAcquisitionBonusCalculationService;
 
 
     @PostMapping("/percentage")
@@ -77,4 +79,16 @@ public class WebController {
 
         return result;
     }
+    @PostMapping("/levels")
+    public  List<CustomerAcquisitionBonusDetails> bonusDetailsList(@RequestBody CustomerAcquisitionLevels levels) throws IOException
+    {
+        List<CustomerAcquisitionBonusDetails> bonusDetailsList = iCustomerAcquisitionBonusCalculationService.setLevels(levels);
+        System.out.println("\n\n**************************\n\n");
+        System.out.println("Customer Acquisition Bonus Details\n\n");
+        for (CustomerAcquisitionBonusDetails i : bonusDetailsList) {
+            System.out.println(i);
+        }
+        return bonusDetailsList;
+    }
+
 }
