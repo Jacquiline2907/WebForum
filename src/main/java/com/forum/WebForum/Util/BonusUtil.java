@@ -15,11 +15,12 @@ public class BonusUtil {
     public static Map<String, Integer> premiumKitPropertyMap = new HashMap<>();
     public static Map<Long, PremiumKitOrderData> premiumKitOrderMap = new HashMap<>();
     public static Map<Long, PremiumKitDistributorData> premiumKitDistributorMap = new HashMap<>();
-    public static Map<String, Integer> customerAcquisitionPropertyMap = new HashMap<>();
-
-    public static List<CustomerAcquisitionOrder> customerAcquisitionOrderList = CustomerAcquisitionOrderData.getOrders();
     public static List<PremiumKitOrderData> premiumKitOrderList = new ArrayList<>();
     public static List<PremiumKitDistributorData> premiumKitDistributorData = new ArrayList<>();
+
+    public static Map<String, Integer> customerAcquisitionPropertyMap = new HashMap<>();
+    public static List<CustomerAcquisitionOrder> customerAcquisitionOrderList = CustomerAcquisitionOrderData.getOrders();
+
 
     public static PremiumKitDistributorData distributorFinder(Long distList){
 //        System.out.println(distList);
