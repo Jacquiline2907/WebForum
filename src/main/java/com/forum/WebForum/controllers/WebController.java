@@ -1,7 +1,9 @@
 package com.forum.WebForum.controllers;
 
-import com.forum.WebForum.Iservice.IPremiumKitBonusCalculation;
 import com.forum.WebForum.Iservice.ICustomerAcquisitionBonusCalculationService;
+import com.forum.WebForum.Iservice.IPremiumKitBonusCalculation;
+import com.forum.WebForum.Service.Sreeja.BonusUtilSreeja;
+import com.forum.WebForum.Service.Sreeja.INoviceBonus;
 import com.forum.WebForum.dataProvider.CompenstionPlansData;
 import com.forum.WebForum.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +20,30 @@ import java.util.Map;
 public class WebController {
 
     @Autowired
+    INoviceBonus noviceBonus;
+
+    @Autowired
     IPremiumKitBonusCalculation IPremiumKitBonusCalculation;
 
     @Autowired
     ICustomerAcquisitionBonusCalculationService iCustomerAcquisitionBonusCalculationService;
 
 
+    @RequestMapping(value = "/novusbonus", method = RequestMethod.POST)
+    public PercentagePropsNovus data(@RequestBody PercentagePropsNovus data) {
+        System.out.println("successfully listened at server " + data);
+//        BonusUtil.propertyMap.clear();
+        BonusUtilSreeja.writingProperties(data);
+        noviceBonus.mainPrgrm();
+        BonusUtilSreeja.propertyMap.clear();
+
+        return data;
+    }
+
+
     @PostMapping("/percentage")
     public PremiumKitBonusReturn setPercentage(@RequestBody PremiumKitPercentage percentage) throws Exception {
-        PremiumKitBonusReturn bonusReturn= IPremiumKitBonusCalculation.setPercentage(percentage);
+        PremiumKitBonusReturn bonusReturn = IPremiumKitBonusCalculation.setPercentage(percentage);
 
         return bonusReturn;
 
@@ -34,28 +51,25 @@ public class WebController {
 
 
     @RequestMapping("/home")
-    public Greetings firstController()
-    {
+    public Greetings firstController() {
 
         System.out.println("controller is hit");
-        return new Greetings(1,"subha");
+        return new Greetings(1, "subha");
     }
 
     @RequestMapping("/isValidUser")
-    public Boolean validateUser(@RequestParam String user)
-    {
-        System.out.println("controller "+ user);
-        if(user.equals("subha6"))
+    public Boolean validateUser(@RequestParam String user) {
+        System.out.println("controller " + user);
+        if (user.equals("subha6"))
             return true;
         else
             return false;
     }
 
     @RequestMapping("/isValidPassword")
-    public Boolean validatePassword(@RequestParam String password)
-    {
-        System.out.println("controller "+ password);
-        if(password.equals("subha6"))
+    public Boolean validatePassword(@RequestParam String password) {
+        System.out.println("controller " + password);
+        if (password.equals("subha6"))
             return true;
         else
             return false;
@@ -63,25 +77,22 @@ public class WebController {
 
 
     @GetMapping("/mainPlans")
-    public List<CompensationPlans> getCompensationPlans(@RequestParam Map<String,String> param)
-    {
+    public List<CompensationPlans> getCompensationPlans(@RequestParam Map<String, String> param) {
         List<CompensationPlans> compensationPlansList = CompenstionPlansData.getCompensationPlans();
         List<CompensationPlans> result = new ArrayList<>();
 
         int key = Integer.parseInt(param.get("mainPlanKey"));
-        for (CompensationPlans i : compensationPlansList)
-        {
-            if(i.getPlanKey() == key)
-            {
+        for (CompensationPlans i : compensationPlansList) {
+            if (i.getPlanKey() == key) {
                 result.add(i);
             }
         }
 
         return result;
     }
+
     @PostMapping("/levels")
-    public  List<CustomerAcquisitionBonusDetails> bonusDetailsList(@RequestBody CustomerAcquisitionLevels levels) throws IOException
-    {
+    public List<CustomerAcquisitionBonusDetails> bonusDetailsList(@RequestBody CustomerAcquisitionLevels levels) throws IOException {
         List<CustomerAcquisitionBonusDetails> bonusDetailsList = iCustomerAcquisitionBonusCalculationService.setLevels(levels);
         System.out.println("\n\n**************************\n\n");
         System.out.println("Customer Acquisition Bonus Details\n\n");
